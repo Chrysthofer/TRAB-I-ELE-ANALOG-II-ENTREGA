@@ -1,0 +1,28 @@
+* Questao 2, item (d): simulacao de corrente continua (ponto de operacao)
+* Amplificador base comum com transistor bipolar PNP
+* Capacitores de acoplamento ajustados (nao influem na polarizacao)
+.param Cac1=7.95u Cac2=6.30u
+VI vi 0 0
+VP vp 0 20
+VN vn 0 -25
+RS vi x 1k
+CC1 x e {Cac1}
+RE vp e 10k
+Q1 c 0 e QP
+* Capacitancias do modelo de pequenos sinais (base = terra): C_pi entre emissor e base, C_mu entre coletor e base
+CPI e 0 10p
+CMU c 0 1p
+RC c vn 6.5k
+CC2 c vo {Cac2}
+RL vo 0 5k
+* beta = 100; VA infinito (padrao); IS escolhida para VEB = 0,7 V na corrente de polarizacao (IC = 1,91 mA)
+.model QP PNP(BF=100 IS=3.37f)
+.op
+.meas op IE  FIND I(RE)
+.meas op IC  FIND I(RC)
+.meas op IB  FIND -Ib(Q1)
+.meas op VE  FIND V(e)
+.meas op VC  FIND V(c)
+.meas op VEB FIND V(e)
+.meas op VEC FIND V(e)-V(c)
+.end

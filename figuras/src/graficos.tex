@@ -1,0 +1,91 @@
+\documentclass[12pt,tikz,border=2pt]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage{siunitx}
+\sisetup{output-decimal-marker={,}, exponent-product=\cdot, per-mode=symbol}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18, /pgf/number format/use comma,
+  every axis/.append style={font=\small},
+  every axis legend/.append style={font=\small},
+  legend cell align=left}
+\begin{document}
+% ---------------------------------------------------------------- Q1, transiente
+\begin{tikzpicture}
+\begin{axis}[width=16.4cm, height=6.2cm, xlabel={tempo (ms)}, ylabel={tensão (mV)},
+  xmin=0, xmax=0.3, ymin=-30, ymax=30, grid=major, legend pos=north east,
+  xtick={0,0.05,...,0.3}, scaled x ticks=false,
+  xticklabel style={/pgf/number format/fixed, /pgf/number format/precision=2}]
+\addplot[blue, thick] table[x=t_ms, y=vi_mV] {q1_transiente.dat};
+\addlegendentry{$v_i$}
+\addplot[red, thick, dashed] table[x=t_ms, y=vo_mV] {q1_transiente.dat};
+\addlegendentry{$v_o$}
+\end{axis}
+\end{tikzpicture}
+% ---------------------------------------------------------------- Q1, frequência
+\begin{tikzpicture}
+\begin{semilogxaxis}[width=16.4cm, height=7.2cm, xlabel={frequência (Hz)}, ylabel={$|v_o/v_i|$ (dB)},
+  xmin=1, xmax=1e7, ymin=-40, ymax=12, grid=both, minor grid style={gray!15},
+  legend pos=south east]
+\addplot[blue, thick] table[x=f, y=dB_proj1] {q1_frequencia.dat};
+\addlegendentry{capacitores do método: $f_L = \qty{86.47}{\hertz}$}
+\addplot[red, thick, dashed] table[x=f, y=dB_proj2] {q1_frequencia.dat};
+\addlegendentry{capacitores ajustados: $f_L = \qty{99.98}{\hertz}$}
+\addplot[black, densely dotted] coordinates {(1,5.064) (1e7,5.064)};
+\addlegendentry{ganho de médias frequências menos \qty{3}{\deci\bel}}
+\addplot[blue, only marks, mark=*, mark size=2.5pt] coordinates {(86.47,5.064)};
+\addplot[red, only marks, mark=square*, mark size=2.5pt] coordinates {(99.98,5.064)};
+\end{semilogxaxis}
+\end{tikzpicture}
+% ---------------------------------------------------------------- Q2, transiente
+\begin{tikzpicture}
+\begin{axis}[width=16.4cm, height=6.2cm, xlabel={tempo (ms)}, ylabel={tensão (mV)},
+  xmin=0, xmax=0.3, ymin=-32, ymax=32, grid=major, legend pos=north east,
+  xtick={0,0.05,...,0.3}, scaled x ticks=false,
+  xticklabel style={/pgf/number format/fixed, /pgf/number format/precision=2}]
+\addplot[blue, thick] table[x=t_ms, y=vi_mV] {q2_transiente.dat};
+\addlegendentry{$v_i$}
+\addplot[red, thick, dashed] table[x=t_ms, y=vo_mV] {q2_transiente.dat};
+\addlegendentry{$v_o$}
+\end{axis}
+\end{tikzpicture}
+% ---------------------------------------------------------------- Q2, frequência
+\begin{tikzpicture}
+\begin{semilogxaxis}[width=16.4cm, height=7.2cm, xlabel={frequência (Hz)}, ylabel={$|v_o/v_i|$ (dB)},
+  xmin=1, xmax=1e10, ymin=-40, ymax=12, grid=both, minor grid style={gray!15},
+  legend style={at={(0.5,0.03)}, anchor=south}]
+\addplot[blue, thick] table[x=f, y=dB_proj1] {q2_frequencia.dat};
+\addlegendentry{capacitores do método: $f_L = \qty{18.21}{\hertz}$}
+\addplot[red, thick, dashed] table[x=f, y=dB_proj2] {q2_frequencia.dat};
+\addlegendentry{capacitores ajustados: $f_L = \qty{20.00}{\hertz}$}
+\addplot[black, densely dotted] coordinates {(1,5.800) (1e10,5.800)};
+\addlegendentry{ganho de médias frequências menos \qty{3}{\deci\bel}}
+\addplot[blue, only marks, mark=*, mark size=2.5pt] coordinates {(18.21,5.800)};
+\addplot[red, only marks, mark=square*, mark size=2.5pt] coordinates {(19.995,5.800)};
+\addplot[black, only marks, mark=triangle*, mark size=3pt] coordinates {(5.619e7,5.800)};
+\node[black, anchor=east, fill=white, inner sep=3pt] at (axis cs:3e7,1.2) {$f_H = \qty{56.19}{\mega\hertz}$};
+\end{semilogxaxis}
+\end{tikzpicture}
+% ---------------------------------------------------------------- Q3, transientes
+\begin{tikzpicture}
+\begin{axis}[name=a1, width=8.2cm, height=6.4cm, xlabel={tempo (ms)}, ylabel={tensão (mV)},
+  xmin=0, xmax=3, ymin=-18, ymax=18, grid=major, legend columns=2,
+  legend style={at={(0.5,-0.32)}, anchor=north, /tikz/every even column/.append style={column sep=6pt}},
+  title={(a) entrada diferencial}]
+\addplot[blue, thick] table[x=t_ms, y=vid_mV] {q3_diferencial.dat};
+\addlegendentry{$v_{id}$}
+\addplot[red, thick, dashed] table[x=t_ms, y=vo2_mV] {q3_diferencial.dat};
+\addlegendentry{$v_{o2} - \qty{3.211}{\volt}$}
+\end{axis}
+\begin{axis}[at={(a1.outer east)}, anchor=outer west, xshift=0.5cm, width=8.2cm, height=6.4cm, xlabel={tempo (ms)},
+  xmin=0, xmax=3, ymin=-18, ymax=18, grid=major, legend columns=2,
+  legend style={at={(0.5,-0.32)}, anchor=north, /tikz/every even column/.append style={column sep=6pt}},
+  title={(b) entrada em modo comum}]
+\addplot[blue, thick] table[x=t_ms, y=vcm_mV] {q3_modo_comum.dat};
+\addlegendentry{$v_{icm}$}
+\addplot[red, thick, dashed] table[x=t_ms, y=vo2_mV] {q3_modo_comum.dat};
+\addlegendentry{$v_{o2} - \qty{3.211}{\volt}$}
+\end{axis}
+\end{tikzpicture}
+\end{document}

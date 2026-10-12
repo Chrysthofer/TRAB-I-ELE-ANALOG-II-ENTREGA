@@ -1,0 +1,52 @@
+\documentclass[11pt,border=4pt]{standalone}
+\input{estilo_circuitos}
+% Questão 3: meio-circuito diferencial de M2 (a) e seu modelo pi com r_o (b).
+% Compilar com pdflatex; o PDF resultante vai para figuras/fig_q3_dif_meio.pdf.
+\begin{document}
+\begin{circuitikz}
+  % ---------------- (a) Meio-circuito diferencial ----------------
+  % M2 com o dreno em (-7.6,0); nó de saída 0,4 cm acima do dreno
+  \draw (-7.6,0) node[nmos, arrowmos, anchor=D] (M) {};
+  \draw (M.D) -- (-7.6,0.4) to[R] (-7.6,2.0) node[ground, rotate=180]{};
+  \draw (-7.6,0.4) -- (-6.4,0.4);
+  \draw (M.G) -- ++(-0.7,0) coordinate (Ga);
+  \draw (M.S) node[ground] (Ta) {};
+  \node[circ] at (-7.6,0.4) {};
+  \node[ocirc] at (-6.4,0.4) {};
+  \node[ocirc] at (Ga) {};
+  % rótulos
+  \node[anchor=east, inner sep=0pt] at (-7.97,1.2) {$R_D$};
+  \node[anchor=west, inner sep=0pt, text=anot] at (-6.184,0.4) {$v_{o2}$};
+  \node[anchor=east, inner sep=0pt, text=anot] at ($(Ga)+(-0.216,0)$) {$-v_{id}/2$};
+  \node[anchor=west, inner sep=0pt] at ($(M)+(0.25,0)$) {$M_2$};
+  \node[anchor=base west, inner sep=0pt, text=anot] at ($(Ta)+(0.37,-0.42)$) {terra virtual};
+
+  % ---------------- (b) Modelo pi ----------------
+  % nó D em (0,0); fio de baixo (fonte S) em y = -3,5; porta G na altura do centro da fonte controlada
+  \draw (0,0) to[cI] (0,-3.5);
+  \draw (0,0) -- (1.4,0) -- (2.7,0) -- (3.6,0);
+  \draw (1.4,0) to[R] (1.4,-3.5) -- (0,-3.5);
+  \draw (2.7,0) to[R] (2.7,1.7) node[ground, rotate=180]{};
+  \draw (-2.2,-3.5) -- (0,-3.5);
+  \draw (0.7,-3.5) node[ground]{};
+  \foreach \p in {(0,0),(1.4,0),(2.7,0),(0,-3.5)} \node[circ] at \p {};
+  \foreach \p in {(3.6,0),(-2.2,-1.75),(-2.2,-3.5)} \node[ocirc] at \p {};
+  % rótulos
+  \node[anchor=base, inner sep=0pt] at (0,0.27) {$D$};
+  \node[anchor=east, inner sep=0pt] at (-0.65,-1.75) {$g_m v_{gs}$};
+  \node[anchor=west, inner sep=0pt] at (1.77,-1.75) {$r_o$};
+  \node[anchor=west, inner sep=0pt] at (3.07,0.85) {$R_D$};
+  \node[anchor=west, inner sep=0pt, text=anot] at (3.816,0) {$v_{o2}$};
+  \node[anchor=base, inner sep=0pt] at (-2.2,-1.5) {$G$};
+  \node[anchor=base, inner sep=0pt] at (-2.2,-2.199) {$+$};
+  \node[anchor=base, inner sep=0pt] at (-2.2,-2.706) {$v_{gs}$};
+  \node[anchor=base, inner sep=0pt] at (-2.2,-3.251) {$-$};
+  \node[anchor=base, inner sep=0pt] at (-2.2,-3.949) {$S$};
+  \node[anchor=base, inner sep=0pt, text=anot] at (1.0,-4.60) {$v_{gs} = -v_{id}/2$};
+
+  % ---------------- legendas das partes ----------------
+  % mesma linha de base para (a) e (b), longe o bastante da anotação para não formar legenda de duas linhas
+  \node[anchor=base, inner sep=0pt] at (-7.6,-5.45) {(a) Meio-circuito diferencial};
+  \node[anchor=base, inner sep=0pt] at (1.0,-5.45) {(b) Modelo $\pi$-híbrido};
+\end{circuitikz}
+\end{document}

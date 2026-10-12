@@ -1,0 +1,46 @@
+\documentclass[11pt,border=4pt]{standalone}
+\input{estilo_circuitos}
+% Modelo genérico de amplificador de tensão dos dois estágios da Questão 1.
+% Compilar com pdflatex; o PDF resultante vai para figuras/fig_c_q1_generico.pdf.
+%
+% Rótulos como nós explícitos (inner sep=0), postos a uma folga fixa do corpo de cada
+% componente. Meias larguras dos símbolos do circuitikz (bipoles/length = 1,4 cm):
+% resistor 0,21 cm, fonte controlada (losango) 0,49 cm, fonte independente (círculo) 0,42 cm.
+\newcommand{\folgaLado}{3.85bp}   % do corpo do componente até o rótulo ao lado
+\newcommand{\folgaPonto}{7.5bp}   % do centro do ponto de junção até a base do rótulo acima
+\newcommand{\folgaRo}{5.95bp}     % do topo do zigue-zague de R_o até a base do rótulo
+\begin{document}
+\begin{circuitikz}
+  % fonte de entrada e estágio 1
+  \draw (0,0) to[V, invert] (0,2.6) -- (2.2,2.6);
+  \draw (2.2,2.6) node[circ]{} to[R] (2.2,0);
+  \draw (4.8,0) to[cV, invert] (4.8,2.6) to[R] (7.0,2.6) -- (8.4,2.6);
+  % estágio 2 e carga
+  \draw (8.4,2.6) node[circ]{} to[R] (8.4,0);
+  \draw (11.0,0) to[cV, invert] (11.0,2.6) to[R] (13.2,2.6) -- (14.4,2.6);
+  \draw (14.4,2.6) node[circ]{} to[R] (14.4,0);
+  \draw (0,0) -- (14.4,0);
+  \draw (0,0) node[ground]{};
+
+  % rótulos dos componentes
+  \node[anchor=mid east, inner sep=0pt] at ($(-0.42,1.3)+(-\folgaLado,0)$) {$v_i$};
+  \node[anchor=mid west, inner sep=0pt] at ($(2.41,1.3)+(\folgaLado,0)$) {$R_{\mathrm{in}1}$};
+  \node[anchor=mid west, inner sep=0pt] at ($(5.29,1.3)+(\folgaLado,0)$) {$A_{vo1}v_{i1}$};
+  \node[anchor=south, inner sep=0pt] at ($(5.9,2.81)+(0,\folgaRo)$) {$R_{o1}$};
+  \node[anchor=mid west, inner sep=0pt] at ($(8.61,1.3)+(\folgaLado,0)$) {$R_{\mathrm{in}2}$};
+  \node[anchor=mid west, inner sep=0pt] at ($(11.49,1.3)+(\folgaLado,0)$) {$A_{vo2}v_{i2}$};
+  \node[anchor=south, inner sep=0pt] at ($(12.1,2.81)+(0,\folgaRo)$) {$R_{o2}$};
+  \node[anchor=mid west, inner sep=0pt] at ($(14.61,1.3)+(\folgaLado,0)$) {$R_L$};
+
+  % tensões de nó em relação à terra
+  \node[anchor=south, inner sep=0pt] at ($(2.2,2.6)+(0,\folgaPonto)$) {$v_{i1}$};
+  \node[anchor=south, inner sep=0pt] at ($(8.4,2.6)+(0,\folgaPonto)$) {$v_{i2}$};
+  \node[anchor=south, inner sep=0pt] at ($(14.4,2.6)+(0,\folgaPonto)$) {$v_o$};
+
+  % limites dos estágios
+  \draw[dashed, gray] (1.6,-0.45) rectangle (7.55,3.55);
+  \draw[dashed, gray] (7.85,-0.45) rectangle (13.65,3.55);
+  \node[gray, font=\small] at (4.575,3.93) {estágio 1 ($M_1$, dreno-comum)};
+  \node[gray, font=\small] at (10.75,3.93) {estágio 2 ($M_2$, porta-comum)};
+\end{circuitikz}
+\end{document}

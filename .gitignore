@@ -1,0 +1,15 @@
+# Arquivos gerados pelo LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+main.pdf
+
+# Arquivos gerados pelo LTspice ao simular
+*.raw
+*.db

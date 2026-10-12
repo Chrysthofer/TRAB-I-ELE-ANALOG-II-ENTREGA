@@ -1,0 +1,80 @@
+% Estágio 2 da Questão 1 (porta-comum) com M2 no modelo T, na região sombreada.
+% Compilar com pdflatex; o PDF resultante vai para figuras/fig_q1_est2_T.pdf.
+\documentclass[11pt,border=4pt]{standalone}
+\input{estilo_circuitos}
+\begin{document}
+\begin{circuitikz}
+  % ---- colunas (cm)
+  \def\xV{0}       % fonte v_i2
+  \def\xA{0.68}    % seta de R_in2
+  \def\xRS{2.05}   % R_S2
+  \def\xGG{2.48}   % terra da porta
+  \def\xTm{3.1}    % terminais G2 e S2
+  \def\xT{5.0}     % fonte controlada e 1/gm
+  \def\xro{6.3}    % r_o
+  \def\xD{7.75}    % terminal D2
+  \def\xRD{8.75}   % R_D
+  \def\xAo{9.95}   % seta de R_o2
+  \def\xRL{10.6}   % R_L
+  \def\xvo{11.45}  % terminal v_o
+  % ---- níveis (cm)
+  \def\yS{0}       % fonte (S2)
+  \def\yG{2.75}    % porta (G2)
+  \def\yCI{4.95}   % topo da fonte controlada
+  \def\yD{5.65}    % dreno (D2)
+  \def\yB{-2.45}   % terra de v_i2 e R_S2
+  \def\yGG{2.25}   % terra da porta
+  \def\yDG{3.3}    % terra de R_D e R_L
+  \pgfmathsetmacro{\yRD}{(\yD+\yDG)/2}  % centro de R_D e R_L
+
+  % região sombreada: M2 no modelo T
+  \fill[sombra] (3.6,-0.45) rectangle (7.25,\yD+0.45);
+
+  % ---- fios e componentes
+  % r_o, fio da fonte (S2) e v_i2 num só caminho, para os cantos saírem fechados
+  \draw (\xro,\yD) to[R] (\xro,\yS) -- (\xV,\yS) to[V] (\xV,\yB) node[ground]{};
+  \draw (\xRS,\yS) to[R] (\xRS,\yB) node[ground]{};
+  \draw (\xT,\yG) -- (\xGG,\yG) -- (\xGG,\yGG) node[ground]{};
+  \draw (\xvo,\yD) -- (\xT,\yD) -- (\xT,\yCI) to[cI] (\xT,\yG) to[R] (\xT,\yS);
+  \draw (\xRD,\yD) to[R] (\xRD,\yDG) node[ground]{};
+  \draw[dashed] (\xRL,\yD) to[R] (\xRL,\yDG) node[ground]{};
+
+  % ---- pontos de junção e terminais
+  \foreach \p in {(\xT,\yD),(\xT,\yG),(\xT,\yS),(\xRS,\yS),(\xRD,\yD),(\xRL,\yD)}
+    \node[circ] at \p {};
+  \foreach \p in {(\xTm,\yS),(\xTm,\yG),(\xD,\yD),(\xvo,\yD)}
+    \node[ocirc] at \p {};
+
+  % ---- rótulos dos componentes
+  \node[anchor=east, inner sep=0pt] at (\xV-0.62,{\yB/2}) {$v_{i2}$};
+  \node[anchor=east, inner sep=0pt] at (\xRS-0.42,{\yB/2}) {$R_{S2}$};
+  \node[anchor=east, inner sep=0pt] at (\xT-0.67,{(\yCI+\yG)/2}) {$i$};
+  \node[anchor=east, inner sep=0pt] at (\xT-0.4,{\yG/2}) {$1/g_m$};
+  \node[anchor=west, inner sep=0pt] at (\xro+0.4,{\yD/2}) {$r_o$};
+  \node[anchor=west, inner sep=0pt] at (\xRD+0.4,\yRD-0.1) {$R_D$};
+  \node[anchor=west, inner sep=0pt] at (\xRL+0.4,\yRD-0.1) {$R_L$};
+
+  % ---- nomes dos terminais
+  \node[anot, anchor=base, inner sep=0pt] at (\xTm,\yG+0.34) {$G_2$};
+  \node[anot, anchor=base, inner sep=0pt] at (\xTm,\yS+0.34) {$S_2$};
+  \node[anot, anchor=base, inner sep=0pt] at (\xD,\yD+0.34) {$D_2$};
+  \node[anot, anchor=west, inner sep=0pt] at (\xvo+0.23,\yD) {$v_o$};
+
+  % ---- anotações
+  % corrente em 1/gm
+  \draw[anot, thick, ->] (\xT+0.55,{\yG/2-0.39}) -- (\xT+0.55,{\yG/2+0.39});
+  \node[anot, anchor=west, inner sep=0pt] at (\xT+0.72,{\yG/2}) {$i$};
+  % numerador e denominador afastados do traço de fração (respiro de 3 pt ou mais)
+  \node[anot, anchor=west, inner sep=0pt] at (7.6,0.75)
+    {$i = \dfrac{\raisebox{2.8pt}{$0 - v_{i2}$}}{\raisebox{-1.8pt}{$1/g_m$}}$};
+  % R_in2: sobe entre v_i2 e o rótulo de R_S2 e aponta para o nó da fonte
+  \draw[anot, thick, ->] (\xA,\yB-0.65) |- (\xRS-0.27,-0.3);
+  \node[anot, anchor=north, inner sep=0pt] at (\xA,\yB-0.81) {$R_{\mathrm{in}2}$ (com $R_L$)};
+  % R_o2: sobe entre R_D e R_L e aponta para o topo de R_D
+  \draw[anot, thick, ->] (\xAo,\yDG-0.55) |- (\xRD+0.3,\yRD+0.65);
+  \node[anot, anchor=north, inner sep=0pt] at (\xAo,\yDG-0.73) {$R_{o2} = R_D \parallel r_o$};
+  % nota sobre R_L
+  \node[anot, anchor=base west, inner sep=0pt, font=\footnotesize] at (8.15,\yD+0.85)
+    {$R_L$: ligado apenas no cálculo de $R_{\mathrm{in}2}$};
+\end{circuitikz}
+\end{document}

@@ -1,0 +1,24 @@
+* Questao 3, item (c): transiente com entrada puramente diferencial
+* vid = 10 mV de pico em 1 kHz (v1 = +vid/2, v2 = -vid/2), vicm = 0
+VID vid 0 SINE(0 10m 1k)
+VCM cm 0 0
+VP vp 0 5
+VN vn 0 -5
+* v1 = vicm + vid/2 e v2 = vicm - vid/2 (fontes de tensao controladas por tensao)
+E1 g1 cm vid 0 0.5
+E2 g2 cm vid 0 -0.5
+RD1 vp d1 25k
+RD2 vp d2 25k
+M1 d1 g1 s s MN L=10u W=10u
+M2 d2 g2 s s MN L=10u W=10u
+RS s vn 20k
+* Transistores identicos: kn'(W/L) = 100 uA/V^2 (KP = 100 uA/V^2 com W = L), Vtn = 1 V, lambda = 0,02 1/V
+.model MN NMOS(Level=1 KP=100u VTO=1 LAMBDA=0.02)
+.options plotwinsize=0 reltol=1e-6
+.tran 0 5m 0 0.5u
+.meas tran vid_pp PP V(vid) FROM 2m TO 5m
+.meas tran vo2_pp PP V(d2) FROM 2m TO 5m
+.meas tran vo2_max FIND V(d2) AT 4.25m
+.meas tran vo2_min FIND V(d2) AT 4.75m
+.meas tran Ad PARAM (vo2_max-vo2_min)/(2*10m)
+.end

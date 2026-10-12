@@ -1,0 +1,34 @@
+% Circuito equivalente c.c. da Questão 2 (base comum com PNP; capacitores abertos).
+% Compilar com pdflatex; o PDF resultante substitui figuras/fig_q2_cc.pdf.
+\documentclass[11pt,border=4pt]{standalone}
+\input{estilo_circuitos}
+\begin{document}
+\begin{circuitikz}
+  % Coordenadas em cm. Linha dos nós V_E e V_C em y = 0; transistor no meio.
+  \def\xE{0}      % ramo de R_E e nó V_E
+  \def\xQ{2.4}    % transistor (base para baixo)
+  \def\xC{4.8}    % ramo de R_C e nó V_C
+
+  % Transistor PNP: emissor à esquerda, coletor à direita, base para baixo, à terra
+  \draw (\xQ,0) node[pnp, rotate=90] (Q) {};
+  \draw (Q.B) node[ground] {};
+
+  % Ramo do emissor: +20 V, R_E, corrente I_E e nó V_E
+  \draw (\xE,2.72) to[R] (\xE,0) node[circ] {} -- (Q.E);
+  \draw (\xE,2.72) node[vcc] {$+20\,\mathrm{V}$};
+  \draw (\xE,0.40) node[currarrow, rotate=-90] {};
+
+  % Ramo do coletor: nó V_C, corrente I_C, R_C e -25 V
+  \draw (Q.C) -- (\xC,0) node[circ] {} to[R] (\xC,-2.72) node[vee] {$-25\,\mathrm{V}$};
+  \draw (\xC,-0.40) node[currarrow, rotate=-90] {};
+
+  % Rótulos
+  \node[anchor=east, align=left, inner sep=0pt] at (\xE-0.40,1.36) {$R_E$\\$10\,\mathrm{k\Omega}$};
+  \node[anchor=west, inner sep=0pt] at (\xE+0.26,0.40) {$I_E$};
+  \node[anchor=north east, inner sep=0pt] at (\xE-0.12,-0.10) {$V_E$};
+  \node[inner sep=0pt] at (\xQ,0.75) {$Q$};
+  \node[anchor=south west, inner sep=0pt] at (\xC+0.16,0.20) {$V_C$};
+  \node[anchor=east, inner sep=0pt] at (\xC-0.22,-0.40) {$I_C$};
+  \node[anchor=west, align=left, inner sep=0pt] at (\xC+0.40,-1.36) {$R_C$\\$6{,}5\,\mathrm{k\Omega}$};
+\end{circuitikz}
+\end{document}

@@ -1,0 +1,79 @@
+% Circuito de sinal da Questão 2 (base-comum, PNP) com o transistor no modelo T, na região sombreada.
+% Compilar com pdflatex; o PDF resultante substitui figuras/fig_q2_T.pdf.
+\documentclass[11pt,border=4pt]{standalone}
+\input{estilo_circuitos}
+\begin{document}
+\begin{circuitikz}
+  % ---- posições (cm) ----
+  \def\yC{5.75}    % fio do coletor
+  \def\yB{2.45}    % nó interno da base
+  \def\yS{3.75}    % centro da fonte controlada
+  \def\yRo{5.20}   % altura da seta de R_o
+  \def\xJ{2.85}    % nó de R_S, R_E e emissor
+  \def\xE{3.85}    % terminais E e B
+  \def\xBg{3.19}   % terra da base
+  \def\xVe{4.24}   % anotação de v_e
+  \def\xT{5.17}    % eixo do modelo T
+  \def\xA{5.62}    % seta de i_e
+  \def\xSl{4.35}   % região sombreada, borda esquerda
+  \def\xSr{7.13}   % região sombreada, borda direita
+  \def\xC{7.58}    % terminal C
+  \def\xRC{8.68}   % R_C
+  \def\xRo{9.70}   % seta de R_o
+  \def\xRL{10.45}  % R_L
+  \def\xVo{11.10}  % terminal de saída
+  \def\xRin{2.02}  % seta de R_in
+
+  % ---- transistor (modelo T) ----
+  \fill[sombra] (\xSl,-0.38) rectangle (\xSr,\yC+0.33);
+
+  % ---- circuito ----
+  \draw (\xJ,0) to[R] (0.63,0) -- (0,0);
+  \draw (0,-2.43) to[V, invert] (0,0);
+  \node[ground] at (0,-2.43) {};
+  \draw (\xJ,0) to[R] (\xJ,-2.43) node[ground]{};
+  \draw (\xT,0) -- (\xE,0) -- (\xJ,0);
+  \draw (\xT,0) to[R] (\xT,\yB);
+  \draw (\xT,\yB) to[cI] (\xT,5.05) -- (\xT,\yC);
+  \draw (\xT,\yB) -- (\xE,\yB) -- (\xBg,\yB) -- (\xBg,1.85) node[ground]{};
+  \draw (\xT,\yC) -- (\xVo,\yC);
+  \draw (\xRC,\yC) to[R] (\xRC,3.55) node[ground]{};
+  \draw (\xRL,\yC) to[R] (\xRL,3.55) node[ground]{};
+  \node[ground] at (\xVe,-2.225) {};
+  \node[circ] at (\xJ,0) {};
+  \node[circ] at (\xT,\yB) {};
+  \node[circ] at (\xRC,\yC) {};
+  \node[circ] at (\xRL,\yC) {};
+  \node[ocirc] at (\xE,0) {};
+  \node[ocirc] at (\xE,\yB) {};
+  \node[ocirc] at (\xC,\yC) {};
+  \node[ocirc] at (\xVo,\yC) {};
+
+  % ---- rótulos dos componentes ----
+  \node[anchor=east, inner sep=0] at (-0.574,-1.215) {$v_i$};
+  \node[anchor=south, inner sep=0] at (1.74,0.40) {$R_S$};
+  \node[anchor=west, inner sep=0] at (\xJ+0.343,-1.215) {$R_E$};
+  \node[anchor=east, inner sep=0] at (\xT-0.343,1.225) {$r_e$};
+  \node[anchor=west, inner sep=0] at (\xT+0.63,\yS) {$\alpha i_e$};
+  \node[anchor=west, inner sep=0] at (\xRC+0.343,4.65) {$R_C$};
+  \node[anchor=west, inner sep=0] at (\xRL+0.343,4.65) {$R_L$};
+
+  % ---- terminais ----
+  \node[term, anchor=base] at (\xC,\yC+0.264) {$C$};
+  \node[term, anchor=base] at (\xE,\yB+0.264) {$B$};
+  \node[term, anchor=base] at (\xE,0.264) {$E$};
+
+  % ---- anotações ----
+  \node[term, anchor=west, inner sep=0] at (\xVo+0.2,\yC) {$v_o = \alpha\, i_e\,(R_C \parallel R_L)$};
+  \draw[term, line width=0.8pt, ->] (\xA,0.85) -- (\xA,1.6);
+  \node[term, anchor=west, inner sep=0] at (\xA+0.2,1.225)
+    {$i_e = \dfrac{v_e\rule[-5.7pt]{0pt}{5.7pt}}{r_e\rule{0pt}{10.3pt}}$};
+  \draw[term, line width=0.8pt, ->] (\xRo,2.87) -- (\xRo,\yRo) -- (\xRC+0.30,\yRo);
+  \node[term, anchor=north, inner sep=0] at (\xRo,2.73) {$R_o = R_C$};
+  \draw[term, line width=0.8pt, ->] (\xRin,-3.2) -- (\xRin,-0.42) -- (\xJ-0.25,-0.42);
+  \node[term, anchor=north, inner sep=0] at (\xRin,-3.32) {$R_{\mathrm{in}} = R_E \parallel r_e$};
+  \node[term, anchor=base] at (\xVe,-0.912) {$+$};
+  \node[term, anchor=base] at (\xVe,-1.424) {$v_e$};
+  \node[term, anchor=base] at (\xVe,-2.011) {$-$};
+\end{circuitikz}
+\end{document}

@@ -1,0 +1,57 @@
+\documentclass[11pt,border=4pt]{standalone}
+\input{estilo_circuitos}
+% Amplificador de dois estágios com MOSFETs da Questão 1 (figura fig_q1_circuito).
+% Linha principal (fonte de M1, C_C2, M2, C_C3, saída) em y = 0; linha da porta de M1 em y = \yg.
+% Rótulos como nós explícitos (inner sep = 0), afastados do corpo de cada componente por uma
+% folga fixa. Medidas do circuitikz usadas: meia largura do resistor = 5.95pt, meia altura do
+% capacitor = 11.9pt, raio da fonte = 11.9pt, meio canal de M2 = 10.95pt, raio do terminal
+% aberto = 1.6pt.
+\begin{document}
+\begin{circuitikz}[rot/.style={inner sep=0pt}]
+  \def\yg{1.57}   % porta de M1
+  \def\yb{-1.62}  % terras da fonte e de R_G
+  \def\yv{-2.39}  % fim de R_S1, R_S2 e R_L
+  \def\yc{(\yg+\yb)/2}  % centro da fonte e de R_G
+  \def\xG{2.59}   % R_G
+  \def\xA{4.56}   % dreno e fonte de M1, R_S1
+  \def\xB{7.40}   % R_S2
+  \def\xM{9.35}   % centro de M2
+  \def\xD{10.72}  % R_D
+  \def\xL{12.91}  % R_L
+  \def\xo{13.70}  % terminal de saída
+  \def\gR{12.45pt}  % eixo do resistor ao rótulo: 5.95pt + 6.5pt de folga
+  \def\gC{18.9pt}   % eixo do capacitor ao rótulo: 11.9pt + 7pt de folga
+  % ---- transistores ----
+  \draw (\xA,\yg) node[nmos, arrowmos] (M1) {};
+  \draw (\xM,0) node[nmos, arrowmos, rotate=90, yscale=-1] (M2) {};
+  % ---- entrada, C_C1, R_G e porta de M1 ----
+  \draw (0,\yb) node[ground]{} to[sV] (0,\yg) to[C] (\xG,\yg) -- (M1.G);
+  \draw (\xG,\yg) to[R] (\xG,\yb) node[ground]{};
+  \draw (\xG,\yg) node[circ]{};
+  % ---- dreno de M1 em +10 V; fonte de M1 com R_S1 para -10 V ----
+  \draw (M1.D) -- ++(0,0.39) node[vcc]{$+10\,\mathrm{V}$};
+  \draw (M1.S) -- (\xA,0) to[R] (\xA,\yv) node[vee]{$-10\,\mathrm{V}$};
+  % ---- C_C2, R_S2 e fonte de M2; porta de M2 na terra ----
+  \draw (\xA,0) to[C] (\xB,0) to[R] (\xB,\yv) node[vee]{$-10\,\mathrm{V}$};
+  \draw (\xB,0) -- (M2.S);
+  \draw (M2.G) node[ground]{};
+  % ---- dreno de M2, R_D, C_C3, R_L e saída ----
+  \draw (M2.D) -- (\xD,0) to[C] (\xL,0) to[short, -o] (\xo,0);
+  \draw (\xD,0) to[R] (\xD,2.19) node[vcc]{$+10\,\mathrm{V}$};
+  \draw (\xL,0) to[R] (\xL,\yv) node[ground]{};
+  \foreach \x in {\xA, \xB, \xD, \xL} \draw (\x,0) node[circ]{};
+  % ---- rótulos ----
+  \node[rot, anchor=east] at ($(0,{\yc})+(-18.4pt,0)$) {$v_i$};  % raio 11.9pt + 6.5pt
+  \node[rot, anchor=south] at ($(0,\yg)!0.5!(\xG,\yg)+(0,\gC)$) {$C_{C1}$};
+  \node[rot, anchor=east, align=left] at ($(\xG,{\yc})+(-\gR,0)$) {$R_G$\\$400\,\mathrm{k\Omega}$};
+  \node[rot, anchor=west] at ($(\xA,\yg)+(5.5pt,1.2pt)$) {$M_1$};  % centrado entre dreno e fonte
+  \node[rot, anchor=east, align=left] at ($(\xA,\yv/2)+(-\gR,0)$) {$R_{S1}$\\$10\,\mathrm{k\Omega}$};
+  \node[rot, anchor=south] at ($(\xA,0)!0.5!(\xB,0)+(0,\gC)$) {$C_{C2}$};
+  \node[rot, anchor=east, align=left] at ($(\xB,\yv/2)+(-\gR,0)$) {$R_{S2}$\\$10\,\mathrm{k\Omega}$};
+  \node[rot, anchor=east] at ($(\xM,0)+(-17.45pt,-13.9pt)$) {$M_2$};  % meio canal 10.95pt + 6.5pt, na altura do canal
+  \node[rot, anchor=east, align=left] at ($(\xD,2.19/2)+(-\gR,0)$) {$R_D$\\$5\,\mathrm{k\Omega}$};
+  \node[rot, anchor=south] at ($(\xD,0)!0.5!(\xL,0)+(0,\gC)$) {$C_{C3}$};
+  \node[rot, anchor=east, align=left] at ($(\xL,\yv/2)+(-\gR,0)$) {$R_L$\\$2\,\mathrm{k\Omega}$};
+  \node[rot, anchor=west] at ($(\xo,0)+(7.1pt,0)$) {$v_o$};  % raio 1.6pt + 5.5pt
+\end{circuitikz}
+\end{document}

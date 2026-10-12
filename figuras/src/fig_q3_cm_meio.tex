@@ -1,0 +1,54 @@
+% Meio-circuito em modo comum de M2 (Questão 3), com R_S representado por 2R_S, e seu modelo pi com r_o.
+% Compilar com pdflatex; o PDF resultante vai para figuras/fig_q3_cm_meio.pdf.
+\documentclass[11pt,border=4pt]{standalone}
+\input{estilo_circuitos}
+\begin{document}
+\begin{circuitikz}
+  % meia largura do zigue-zague do resistor, raio dos terminais e folga padrão entre rótulo e traço
+  \def\zw{0.21cm}
+  \def\rc{1.6pt}
+  \def\gap{4.5pt}
+  % ---------------- (a) meio-circuito em modo comum (nó do dreno em (0,0)) ----------------
+  \draw (0,1.6) node[ground, rotate=180]{} to[R] (0,0) -- (0,-0.4)
+        node[nmos, arrowmos, anchor=D] (M) {};
+  \draw (0,0) node[circ]{} to[short, -o] (1.2,0);
+  \draw (M.G) -- ++(-0.7,0) node[ocirc] (VIa) {};
+  \draw (M.S) to[R] ++(0,-1.8) node[ground]{};
+  \draw[anot, line width=0.8pt, -latex] ($(M.S)+(0.45,-0.45)$) -- ++(0,-0.7);
+  % rótulos de (a)
+  \node[anchor=east, inner sep=0pt] at ([xshift=-\zw-\gap]0,0.8) {$R_D$};
+  \node[anot, anchor=west, inner sep=0pt] at ([xshift=\rc+\gap]1.2,0) {$v_{o2}$};
+  \node[anot, anchor=east, inner sep=0pt] at ([xshift=-\rc-\gap]VIa.center) {$v_{icm}$};
+  \node[anchor=west, inner sep=0pt] at ([xshift=0.27cm]M.G -| M.D) {$M_2$};
+  \node[anchor=east, inner sep=0pt] at ([xshift=-\zw-\gap]$(M.S)+(0,-0.9)$) {$2R_S$};
+  \node[anot, anchor=west, inner sep=0pt] at ([xshift=6pt]$(M.S)+(0.45,-0.8)$) {$i$};
+
+  % ---------------- (b) modelo pi (nó D em (7.6,0)) ----------------
+  \begin{scope}[shift={(7.6,0)}, local bounding box=bb]
+    \draw (0,0) to[cI] (0,-2.4);
+    \draw (0,0) -- (1.4,0) to[R] (1.4,-2.4) -- (0,-2.4);
+    \draw (1.4,0) -- (2.7,0) to[short, -o] (3.6,0);
+    \draw (2.7,0) to[R] (2.7,1.7) node[ground, rotate=180]{};
+    % fio entre S e 2R_S mais longo que na original, para o rótulo do nó S caber entre o fio e o resistor
+    \draw (0.7,-2.4) -- (0.7,-2.6) to[R] (0.7,-4.6) node[ground]{};
+    \draw (0,0) node[circ]{} (1.4,0) node[circ]{} (2.7,0) node[circ]{} (0.7,-2.4) node[circ]{};
+    \draw (-2.3,-1.2) node[ocirc] (G) {};
+    % rótulos de (b)
+    \node[anchor=south, inner sep=0pt] at ([yshift=\rc+6pt]G.center) {$G$};
+    \node[anot, anchor=north, inner sep=0pt] at ([yshift=-\rc-7pt]G.center) {$v_{icm}$};
+    \node[anchor=south, inner sep=0pt] at ([yshift=\rc+6pt]0,0) {$D$};
+    \node[anchor=east, inner sep=0pt] at ([xshift=-0.49cm-\gap]0,-1.2) {$g_mv_{gs}$};
+    \node[anchor=west, inner sep=0pt] at ([xshift=\zw+\gap]1.4,-1.2) {$r_o$};
+    \node[anchor=north west, inner sep=0pt] at ([xshift=\gap, yshift=-\gap]0.7,-2.4) {$S\ (v_s)$};
+    \node[anchor=east, inner sep=0pt] at ([xshift=-\zw-\gap]0.7,-3.6) {$2R_S$};
+    \node[anchor=west, inner sep=0pt] at ([xshift=\zw+\gap]2.7,0.85) {$R_D$};
+    \node[anot, anchor=west, inner sep=0pt] at ([xshift=\rc+\gap]3.6,0) {$v_{o2}$};
+    \coordinate (terra) at (0.7,-4.6);
+  \end{scope}
+  % equações e legendas das partes, centradas como na original
+  \node[anot, anchor=north, inner sep=0pt] (eq) at ([yshift=-0.42cm-4pt-5pt]bb.center |- terra)
+    {$v_{gs} = v_{icm} - v_s,\quad v_s = 2R_S\,i_d$};
+  \node[anchor=north, inner sep=0pt] (capb) at ([yshift=-5pt]eq.south) {(b) Modelo $\pi$-híbrido};
+  \node[anchor=base, inner sep=0pt] at (capb.base -| 0,0) {(a) Meio-circuito em modo comum};
+\end{circuitikz}
+\end{document}

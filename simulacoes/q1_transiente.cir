@@ -1,0 +1,25 @@
+* Questao 1, item (d): simulacao de transiente
+* Senoide de 10 mV de pico em 10 kHz (meio da faixa de passagem)
+* Capacitores de acoplamento ajustados para fL = 100 Hz
+.param Cac1=34.4n Cac2=3.07u Cac3=2.00u
+VI vi 0 SINE(0 10m 10k)
+VDD vdd 0 10
+VSS vss 0 -10
+CC1 vi g1 {Cac1}
+RG g1 0 400k
+M1 vdd g1 s1 s1 MN L=10u W=10u
+RS1 s1 vss 10k
+CC2 s1 s2 {Cac2}
+RS2 s2 vss 10k
+M2 d2 0 s2 s2 MN L=10u W=10u
+RD vdd d2 5k
+CC3 d2 vo {Cac3}
+RL vo 0 2k
+* Transistores identicos: kn'(W/L) = 8 mA/V^2 (KP = 8 mA/V^2 com W = L), Vtn = 2 V, lambda = 0,01 1/V
+.model MN NMOS(Level=1 KP=8m VTO=2 LAMBDA=0.01)
+.options plotwinsize=0 reltol=1e-6
+.tran 0 2m 0 50n
+.meas tran vi_pp PP V(vi) FROM 1m TO 2m
+.meas tran vo_pp PP V(vo) FROM 1m TO 2m
+.meas tran Av PARAM vo_pp/vi_pp
+.end

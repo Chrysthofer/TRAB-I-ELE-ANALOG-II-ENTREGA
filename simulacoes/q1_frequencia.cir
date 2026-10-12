@@ -1,0 +1,25 @@
+* Questao 1, item (d): resposta em frequencia
+* projeto = 1 -> capacitores do metodo das constantes de tempo de curto-circuito (39,8 nF; 3,55 uF; 2,31 uF)
+* projeto = 2 -> capacitores multiplicados por 0,865 para fL = 100 Hz (34,4 nF; 3,07 uF; 2,00 uF)
+.param Cac1={if(projeto==1, 39.8n, 34.4n)} Cac2={if(projeto==1, 3.55u, 3.07u)} Cac3={if(projeto==1, 2.31u, 2.00u)}
+.step param projeto list 1 2
+VI vi 0 AC 1
+VDD vdd 0 10
+VSS vss 0 -10
+CC1 vi g1 {Cac1}
+RG g1 0 400k
+M1 vdd g1 s1 s1 MN L=10u W=10u
+RS1 s1 vss 10k
+CC2 s1 s2 {Cac2}
+RS2 s2 vss 10k
+M2 d2 0 s2 s2 MN L=10u W=10u
+RD vdd d2 5k
+CC3 d2 vo {Cac3}
+RL vo 0 2k
+* Transistores identicos: kn'(W/L) = 8 mA/V^2 (KP = 8 mA/V^2 com W = L), Vtn = 2 V, lambda = 0,01 1/V
+.model MN NMOS(Level=1 KP=8m VTO=2 LAMBDA=0.01)
+.ac dec 200 0.1 10Meg
+.meas ac Amed FIND mag(V(vo)) AT 10k
+.meas ac Vo10k FIND V(vo) AT 10k
+.meas ac fL WHEN mag(V(vo))=Amed/sqrt(2) RISE=1
+.end

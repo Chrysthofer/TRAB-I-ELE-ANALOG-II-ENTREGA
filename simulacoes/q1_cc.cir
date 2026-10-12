@@ -1,0 +1,30 @@
+* Questao 1, item (d): simulacao de corrente continua (ponto de operacao)
+* M1 em dreno comum (seguidor de fonte) seguido de M2 em porta comum
+* Capacitores de acoplamento ajustados (nao influem na polarizacao)
+.param Cac1=34.4n Cac2=3.07u Cac3=2.00u
+VI vi 0 0
+VDD vdd 0 10
+VSS vss 0 -10
+CC1 vi g1 {Cac1}
+RG g1 0 400k
+M1 vdd g1 s1 s1 MN L=10u W=10u
+RS1 s1 vss 10k
+CC2 s1 s2 {Cac2}
+RS2 s2 vss 10k
+M2 d2 0 s2 s2 MN L=10u W=10u
+RD vdd d2 5k
+CC3 d2 vo {Cac3}
+RL vo 0 2k
+* Transistores identicos: kn'(W/L) = 8 mA/V^2 (KP = 8 mA/V^2 com W = L), Vtn = 2 V, lambda = 0,01 1/V
+.model MN NMOS(Level=1 KP=8m VTO=2 LAMBDA=0.01)
+.op
+.meas op ID1  FIND Id(M1)
+.meas op ID2  FIND Id(M2)
+.meas op VS1  FIND V(s1)
+.meas op VS2  FIND V(s2)
+.meas op VD2  FIND V(d2)
+.meas op VGS1 FIND V(g1)-V(s1)
+.meas op VGS2 FIND -V(s2)
+.meas op VDS1 FIND V(vdd)-V(s1)
+.meas op VDS2 FIND V(d2)-V(s2)
+.end

@@ -1,0 +1,60 @@
+\documentclass[11pt,border=4pt]{standalone}
+\input{estilo_circuitos}
+% Circuito c.c. da Questão 3 (par diferencial NMOS com v1 = v2 = 0) e os valores calculados.
+% Compilar com pdflatex; o PDF resultante vai para figuras/fig_q3_cc.pdf (entra com escala 1).
+\begin{document}
+\begin{circuitikz}
+  % ramos: esquerdo (M1) em x = 0, direito (M2) em x = 4,4 cm, eixo de simetria em x = 2,2 cm;
+  % trilho de V+ em y = 0
+  \coordinate (TL) at (0,0);
+  \coordinate (TR) at (4.4,0);
+  \coordinate (TC) at (2.2,0);
+
+  % trilho superior e alimentação V+
+  \draw (TL) -- (TR);
+  \draw (TC) node[circ]{} -- ++(0,0.4) node[vcc](VCC){};
+  \node[anchor=base, inner sep=0pt] at ($(VCC.north)+(0,7.5pt)$) {$V^+ = 5\,\mathrm{V}$};
+
+  % resistores de dreno (alongados para afastar o rótulo do nó de dreno do ziguezague)
+  \draw (TL) to[R] ++(0,-1.9) node[circ](DL){};
+  \draw (TR) to[R] ++(0,-1.9) node[circ](DR){};
+  \node[anchor=east, align=left, inner sep=0pt] at ($(TL)!0.5!(DL)+(-0.39,0)$) {$R_D$\\$25\,\mathrm{k\Omega}$};
+  \node[anchor=west, align=left, inner sep=0pt] at ($(TR)!0.5!(DR)+(0.39,0)$) {$R_D$\\$25\,\mathrm{k\Omega}$};
+  \node[anchor=east, inner sep=0pt, text=anot] at ($(DL)+(-6.5pt,0)$) {$V_{D1} = 3{,}241\,\mathrm{V}$};
+  \node[anchor=west, inner sep=0pt, text=anot] at ($(DR)+(6.5pt,0)$) {$v_{O2} = 3{,}241\,\mathrm{V}$};
+
+  % transistores NMOS (seta na fonte, porta voltada para fora do par)
+  \draw (DL) -- ++(0,-1.0) node[nmos, arrowmos, anchor=D](M1){};
+  \draw (DR) -- ++(0,-1.0) node[nmos, arrowmos, xscale=-1, anchor=D](M2){};
+  \node[anchor=west, inner sep=0pt] at ($(M1.center)+(7pt,0)$) {$M_1$};
+  \node[anchor=east, inner sep=0pt] at ($(M2.center)+(-7pt,0)$) {$M_2$};
+
+  % correntes de dreno
+  \draw[thick, -latex] ($(DL)+(0.28,-0.17)$) -- ++(0,-0.6);
+  \node[anchor=west, inner sep=0pt] at ($(DL)+(0.28,-0.47)+(7pt,0)$) {$I_{D1}$};
+  \draw[thick, -latex] ($(DR)+(-0.28,-0.17)$) -- ++(0,-0.6);
+  \node[anchor=east, inner sep=0pt] at ($(DR)+(-0.28,-0.47)+(-7pt,0)$) {$I_{D2}$};
+
+  % portas aterradas
+  \draw (M1.G) -- ++(-0.8,0) coordinate(GL) node[ground]{};
+  \draw (M2.G) -- ++(0.8,0) coordinate(GR) node[ground]{};
+  \node[anchor=south, inner sep=0pt, text=anot] at ($(GL)!0.5!(M1.G)+(0,7pt)$) {$v_1 = 0$};
+  \node[anchor=south, inner sep=0pt, text=anot] at ($(GR)!0.5!(M2.G)+(0,7pt)$) {$v_2 = 0$};
+
+  % nó das fontes
+  \draw (M1.S) -- ++(0,-0.5) coordinate(SL) -- (SL -| TR) -- (M2.S);
+  \coordinate (SC) at (SL -| TC);
+  \node[anchor=south, inner sep=0pt, text=anot] at ($(SC)+(0,7pt)$) {$V_S = -2{,}186\,\mathrm{V}$};
+
+  % resistor de fonte e alimentação V-
+  \draw (SC) node[circ]{} to[R] ++(0,-1.9) node[vee](VEE){};
+  \node[anchor=east, align=left, inner sep=0pt] at ($(SC)!0.5!(VEE)+(-0.39,0)$) {$R_S$\\$20\,\mathrm{k\Omega}$};
+  \draw[thick, -latex] ($(SC)+(0.7,-0.35)$) -- ++(0,-0.7);
+  \node[anchor=west, inner sep=0pt] at ($(SC)+(0.7,-0.7)+(7pt,0)$) {$I_S$};
+  \node[anchor=north, inner sep=0pt] at ($(VEE.south)+(0,-5pt)$) {$V^- = -5\,\mathrm{V}$};
+
+  % resumo das correntes
+  \node[anchor=north, inner sep=0pt, text=anot] at ($(VEE.south)+(0,-30pt)$)
+    {$I_{D1} = I_{D2} = I_S/2 = 70{,}35\,\mu\mathrm{A}$, \quad $I_S = 140{,}7\,\mu\mathrm{A}$};
+\end{circuitikz}
+\end{document}

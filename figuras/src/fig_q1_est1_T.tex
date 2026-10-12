@@ -1,0 +1,73 @@
+% Estágio 1 da Questão 1 (dreno-comum) com M1 no modelo T, na região sombreada.
+% Compilar com pdflatex; o PDF resultante vai para figuras/fig_q1_est1_T.pdf.
+\documentclass[11pt,border=4pt]{standalone}
+\input{estilo_circuitos}
+% Escoras invisíveis que afastam numerador e denominador do traço de fração.
+\newcommand{\desce}[1]{\rule[-#1]{0pt}{#1}}
+\newcommand{\sobe}[1]{\rule{0pt}{#1}}
+\begin{document}
+\begin{circuitikz}[rot/.style={inner sep=0pt}]
+  % Colunas (cm): fonte v_i, seta de R_in1, R_G, terminal G_1, eixo do modelo T,
+  % r_o, terminal S_1, R_S1, saída v_o1 e seta de R_o1.
+  \def\xvi{0}    \def\xa{0.7}   \def\xRG{1.95}  \def\xG{3.0}  \def\xM{4.85}
+  \def\xro{6.0}  \def\xS{7.45}  \def\xRS{8.45}  \def\xvo{9.45} \def\xc{10.75}
+  % Linhas: fonte (S), porta (G) e dreno (D).
+  \def\yS{0}  \def\yG{2.8}  \def\yD{5.0}
+  % Meias larguras: resistor, fonte de tensão, losango; raio do terminal aberto.
+  \def\meiaR{0.21}  \def\meiaV{0.42}  \def\meiaL{0.49}  \def\raio{1.6pt}
+
+  % região do transistor (modelo T)
+  \fill[sombra] (3.45,-0.6) rectangle (6.85,5.9);
+
+  % dreno em terra
+  \draw (\xM,\yD) -- (\xM,5.6) node[ground, rotate=180]{};
+  % fonte controlada (dreno -> porta) e 1/g_m (porta -> fonte)
+  \draw (\xM,\yD) to[cI] (\xM,\yG) to[R] (\xM,\yS);
+  % r_o entre dreno e fonte
+  \draw (\xM,\yD) -- (\xro,\yD) to[R] (\xro,\yS) -- (\xM,\yS);
+  % entrada: v_i, R_G e porta
+  \draw (\xvi,0.4) node[ground]{};
+  \draw (\xvi,\yG) to[V] (\xvi,0.4);
+  \draw (\xvi,\yG) -- (\xM,\yG);
+  \draw (\xRG,\yG) to[R] (\xRG,0.4) node[ground]{};
+  % saída: S_1, R_S1 e v_o1
+  \draw (\xM,\yS) -- (\xvo,\yS);
+  \draw (\xRS,\yS) to[R] (\xRS,-2.0) node[ground]{};
+
+  % pontos de junção e terminais
+  \node[circ] at (\xRG,\yG) {};
+  \node[circ] at (\xM,\yG) {};
+  \node[circ] at (\xM,\yS) {};
+  \node[circ] at (\xRS,\yS) {};
+  \node[ocirc] at (\xG,\yG) {};
+  \node[ocirc] at (\xS,\yS) {};
+  \node[ocirc] at (\xvo,\yS) {};
+
+  % rótulos dos componentes
+  \node[rot, anchor=east, xshift=-5pt] at (\xvi-\meiaV,1.6) {$v_i$};
+  \node[rot, anchor=east, xshift=-5pt] at (\xRG-\meiaR,1.6) {$R_G$};
+  \node[rot, anchor=east, xshift=-5pt] at (\xM-\meiaL,3.9) {$i$};
+  \node[rot, anchor=east, xshift=-5pt] at (\xM-\meiaR,1.4) {$1/g_m$};
+  \node[rot, anchor=west, xshift=5pt] at (\xro+\meiaR,2.5) {$r_o$};
+  \node[rot, anchor=west, xshift=5pt] at (\xRS+\meiaR,-1.0) {$R_{S1}$};
+
+  % terminais
+  \node[rot, anot, anchor=east, xshift=-5pt] at (\xM,5.3) {$D_1$};
+  \node[rot, anot, anchor=south, yshift=\raio+5.9pt] at (\xG,\yG) {$G_1$};
+  \node[rot, anot, anchor=north, yshift=-\raio-5pt] at (\xS,\yS) {$S_1$};
+  \node[rot, anot, anchor=west, xshift=\raio+5pt] at (\xvo,\yS) {$v_{o1}$};
+
+  % corrente i em 1/g_m
+  \draw[anot, thick, ->] (5.4,1.8) -- (5.4,1.0);
+  \node[rot, anot, anchor=west, xshift=4.5pt] at (5.4,1.47) {$i$};
+  \node[rot, anot, anchor=west] at (7.2,3.05)
+    {$i = \dfrac{v_{gs}\desce{5.2pt}}{\sobe{9.8pt}1/g_m}$};
+
+  % resistências vistas
+  \draw[anot, thick, ->] (\xa,-0.45) -- (\xa,2.55) -- (1.72,2.55);
+  \node[rot, anot, anchor=north, yshift=-5pt] at (\xa,-0.45) {$R_{\mathrm{in}1} = R_G$};
+  \draw[anot, thick, ->] (\xc,-1.40) -- (\xc,-0.32) -- (9.15,-0.32);
+  \node[rot, anot, anchor=north, yshift=-4pt] at (\xc,-1.35)
+    {$R_{o1} = \frac{1\desce{4.05pt}}{\sobe{8.2pt}g_m} \parallel r_o \parallel R_{S1}$};
+\end{circuitikz}
+\end{document}

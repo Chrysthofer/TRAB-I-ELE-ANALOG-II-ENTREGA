@@ -1,0 +1,56 @@
+\documentclass[11pt,border=4pt]{standalone}
+\input{estilo_circuitos}
+% Circuito equivalente c.c. da Questão 1, com os capacitores abertos (fig:q1-cc).
+% Compilar com pdflatex; o PDF vai para figuras/fig_q1_cc.pdf e entra no relatório em escala 1.
+% Os rótulos são nós explícitos (inner sep=0pt) com afastamento fixo de 6 a 7 pt do elemento,
+% para manter a folga mínima de 3 pt medida pelo folga.py.
+\begin{document}
+\begin{circuitikz}
+  % ================= M1 (à esquerda): porta em 0 V por R_G =================
+  \node[nmos, arrowmos] (M1) at (0,0) {};
+  \coordinate (A) at ($(M1.D |- M1.G)+(-2.32,0)$);   % canto porta / R_G
+  % dreno direto em +10 V
+  \draw (M1.D) -- ++(0,0.47) node[vcc] (P1) {};
+  % porta: R_G até a terra
+  \draw (M1.G) -- (A) to[R] ++(0,-3.04) node[ground] {};
+  % fonte: I_D1, nó V_S1, R_S1 e -10 V
+  \draw (M1.S) -- ++(0,-1.06) coordinate (S1) to[R] ++(0,-2.80) node[vee] (N1) {};
+  \node[currarrow, rotate=-90] (I1) at ($(M1.S)!0.5!(S1)$) {};
+  \node[circ] at (S1) {};
+
+  % ================= M2 (à direita): porta aterrada =================
+  \node[nmos, arrowmos] (M2) at (7.60,0) {};
+  % dreno: nó V_D2, R_D e +10 V
+  \draw (M2.D) -- ++(0,0.71) coordinate (D2) to[R] ++(0,2.34) node[vcc] (P2) {};
+  \node[circ] at (D2) {};
+  % porta direto na terra
+  \draw (M2.G) -- ($(M2.D |- M2.G)+(-2.08,0)$) node[ground] {};
+  % fonte: I_D2, nó V_S2, R_S2 e -10 V
+  \draw (M2.S) -- ++(0,-1.06) coordinate (S2) to[R] ++(0,-2.80) node[vee] (N2) {};
+  \node[currarrow, rotate=-90] (I2) at ($(M2.S)!0.5!(S2)$) {};
+  \node[circ] at (S2) {};
+
+  % ================= rótulos =================
+  % meia largura do zigue-zague do resistor: 0,21 cm; haste de vcc/vee: 0,42 cm
+  \begin{scope}[every node/.style={inner sep=0pt}]
+    % M1
+    \node[anchor=south] at ($(P1)+(0,0.42cm+7pt)$) {$+10\,\mathrm{V}$};
+    \node[anchor=west] at ($(M1.D)!0.5!(M1.S)+(6pt,0)$) {$M_1$};
+    \node[anchor=south] at ($(A)+(0,6pt)$) {$V_{G1} = 0$};
+    \node[anchor=east, align=left] at ($(A)+(-0.21cm-6pt,-1.52cm)$) {$R_G$\\$400\,\mathrm{k\Omega}$};
+    \node[anchor=east] at ($(I1)+(-7pt,0)$) {$I_{D1}$};
+    \node[anchor=west] at ($(S1)+(6pt,0)$) {$V_{S1}$};
+    \node[anchor=east, align=left] at ($(S1)+(-0.21cm-6pt,-1.40cm)$) {$R_{S1}$\\$10\,\mathrm{k\Omega}$};
+    \node[anchor=north] at ($(N1)+(0,-0.42cm-6pt)$) {$-10\,\mathrm{V}$};
+    % M2
+    \node[anchor=south] at ($(P2)+(0,0.42cm+7pt)$) {$+10\,\mathrm{V}$};
+    \node[anchor=west, align=left] at ($(D2)+(0.21cm+6pt,1.17cm)$) {$R_D$\\$5\,\mathrm{k\Omega}$};
+    \node[anchor=west] at ($(D2)+(6pt,0)$) {$V_{D2}$};
+    \node[anchor=west] at ($(M2.D)!0.5!(M2.S)+(6pt,0)$) {$M_2$};
+    \node[anchor=east] at ($(I2)+(-7pt,0)$) {$I_{D2}$};
+    \node[anchor=west] at ($(S2)+(6pt,0)$) {$V_{S2}$};
+    \node[anchor=east, align=left] at ($(S2)+(-0.21cm-6pt,-1.40cm)$) {$R_{S2}$\\$10\,\mathrm{k\Omega}$};
+    \node[anchor=north] at ($(N2)+(0,-0.42cm-6pt)$) {$-10\,\mathrm{V}$};
+  \end{scope}
+\end{circuitikz}
+\end{document}

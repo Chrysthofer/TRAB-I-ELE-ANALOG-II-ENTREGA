@@ -1,0 +1,17 @@
+% Estilo comum dos esquemáticos do relatório (circuitikz).
+% Uso: \documentclass[11pt,border=4pt]{standalone} e, em seguida, \input{estilo_circuitos}.
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{calc,arrows.meta}
+
+% Cores das figuras originais
+\definecolor{anot}{RGB}{0,135,200}      % anotações: valores calculados, setas, resistências vistas
+\definecolor{sombra}{RGB}{220,242,253}  % região do transistor nos modelos T e pi
+\definecolor{term}{RGB}{62,124,148}     % nomes de terminais destacados (B, C, E)
+
+% Fios com 0,4 pt e corpo dos componentes com 0,8 pt, como nas figuras originais
+\ctikzset{bipoles/thickness=2}

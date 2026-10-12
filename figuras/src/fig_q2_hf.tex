@@ -1,0 +1,96 @@
+% Circuito de sinal da Questão 2 em altas frequências: transistor PNP em base comum,
+% no modelo T (região sombreada), com C_pi entre emissor e base e C_mu entre coletor e base.
+% Compilar com pdflatex; o PDF resultante substitui figuras/fig_q2_hf.pdf.
+\documentclass[11pt,border=4pt]{standalone}
+\input{estilo_circuitos}
+\begin{document}
+\begin{circuitikz}
+  % ---------------------------------------------------------------- colunas (cm)
+  \def\xvi{0}      % fonte v_i
+  \def\xRSa{0.6}   % início de R_S
+  \def\xRE{2.7}    % nó de R_S, R_E e emissor
+  \def\xBg{3.1}    % terra da base
+  \def\xBE{3.7}    % terminais B e E
+  \def\xS{4.1}     % borda esquerda da região sombreada
+  \def\xA{5.6}     % fonte controlada e r_e
+  \def\xK{7.0}     % C_mu e C_pi
+  \def\xSd{8.35}   % borda direita da região sombreada
+  \def\xC{8.85}    % terminal C
+  \def\xRC{10.05}  % R_C
+  \def\xRL{11.85}  % R_L
+  \def\xvo{12.65}  % saída v_o
+  % ---------------------------------------------------------------- linhas (cm)
+  \def\yE{0}       % emissor
+  \def\yB{2.2}     % base
+  \def\yN{4.6}     % nó de alpha i_e e C_mu
+  \def\yC{5.2}     % coletor
+  \def\yG{-2.2}    % terras de v_i e R_E
+  \def\yBg{1.7}    % terra da base
+  \def\yRg{3.2}    % terras de R_C e R_L
+  % meias larguras dos símbolos (circuitikz, bipoles/length = 1,4 cm)
+  \def\hR{0.21}    % resistor
+  \def\hK{0.42}    % placas do capacitor
+  \def\hD{0.49}    % losango da fonte controlada
+  \def\hV{0.42}    % círculo da fonte de tensão
+  % respiros: cada valor deixa cerca de 6 pt de branco entre a tinta do rótulo e a do desenho
+  \def\folga{5pt}     % rótulo ao lado do símbolo
+  \def\folgaR{3.8pt}  % R_C e R_L (o itálico e o vértice do zigue-zague já afastam o R)
+  \def\folgat{7.6pt}  % do centro do terminal (raio 1,6 pt) à base do nome do terminal
+  \def\folgao{7.1pt}  % do centro do terminal de saída ao rótulo v_o
+  \def\folgas{5.2pt}  % do topo do zigue-zague de R_S à base do rótulo
+
+  % ---------------------------------------------------------------- região do transistor (modelo T)
+  \fill[sombra] (\xS,\yE-0.35) rectangle (\xSd,\yC+0.3);
+
+  % ---------------------------------------------------------------- fios e componentes
+  % entrada: v_i, R_S, R_E e emissor
+  \draw (\xvi,\yE) to[V] (\xvi,\yG);
+  \draw (\xvi,\yE) -- (\xRSa,\yE) to[R] (\xRE,\yE) -- (\xK,\yE);
+  \draw (\xRE,\yE) to[R] (\xRE,\yG);
+  % r_e e C_pi, entre emissor e base
+  \draw (\xA,\yE) to[R] (\xA,\yB);
+  \draw (\xK,\yE) to[C] (\xK,\yB);
+  % base em terra
+  \draw (\xBg,\yBg) -- (\xBg,\yB) -- (\xK,\yB);
+  % fonte controlada alpha i_e e C_mu, entre base e coletor
+  \draw (\xA,\yB) to[cI] (\xA,\yN) -- (\xA,\yC) -- (\xvo,\yC);
+  \draw (\xK,\yB) to[C] (\xK,\yN) -- (\xA,\yN);
+  % carga: R_C e R_L
+  \draw (\xRC,\yC) to[R] (\xRC,\yRg);
+  \draw (\xRL,\yC) to[R] (\xRL,\yRg);
+
+  % ---------------------------------------------------------------- terras
+  \draw (\xvi,\yG) node[ground]{};
+  \draw (\xRE,\yG) node[ground]{};
+  \draw (\xBg,\yBg) node[ground]{};
+  \draw (\xRC,\yRg) node[ground]{};
+  \draw (\xRL,\yRg) node[ground]{};
+
+  % ---------------------------------------------------------------- junções e terminais
+  \node[circ] at (\xRE,\yE) {};
+  \node[circ] at (\xA,\yB) {};
+  \node[circ] at (\xK,\yB) {};
+  \node[circ] at (\xA,\yN) {};
+  \node[circ] at (\xRC,\yC) {};
+  \node[circ] at (\xRL,\yC) {};
+  \node[ocirc] at (\xBE,\yE) {};
+  \node[ocirc] at (\xBE,\yB) {};
+  \node[ocirc] at (\xC,\yC) {};
+  \node[ocirc] at (\xvo,\yC) {};
+
+  % ---------------------------------------------------------------- rótulos
+  \node[anchor=east, inner sep=0pt, xshift=-\folga] at ({\xvi-\hV},{(\yE+\yG)/2}) {$v_i$};
+  \node[anchor=south, inner sep=0pt, yshift=\folgas] at ({(\xRSa+\xRE)/2},\hR) {$R_S$};
+  \node[anchor=east, inner sep=0pt, xshift=-\folga] at ({\xRE-\hR},{(\yE+\yG)/2}) {$R_E$};
+  \node[anchor=south, inner sep=0pt, yshift=\folgat, text=term] at (\xBE,\yE) {$E$};
+  \node[anchor=south, inner sep=0pt, yshift=\folgat, text=term] at (\xBE,\yB) {$B$};
+  \node[anchor=south, inner sep=0pt, yshift=\folgat, text=term] at (\xC,\yC) {$C$};
+  \node[anchor=east, inner sep=0pt, xshift=-\folga] at ({\xA-\hR},{(\yE+\yB)/2}) {$r_e$};
+  \node[anchor=west, inner sep=0pt, xshift=\folga] at ({\xK+\hK},{(\yE+\yB)/2}) {$C_\pi$};
+  \node[anchor=east, inner sep=0pt, xshift=-\folga] at ({\xA-\hD},{(\yB+\yN)/2}) {$\alpha i_e$};
+  \node[anchor=west, inner sep=0pt, xshift=\folga] at ({\xK+\hK},{(\yB+\yN)/2}) {$C_\mu$};
+  \node[anchor=west, inner sep=0pt, xshift=\folgaR] at ({\xRC+\hR},{(\yC+\yRg)/2}) {$R_C$};
+  \node[anchor=west, inner sep=0pt, xshift=\folgaR] at ({\xRL+\hR},{(\yC+\yRg)/2}) {$R_L$};
+  \node[anchor=west, inner sep=0pt, xshift=\folgao] at (\xvo,\yC) {$v_o$};
+\end{circuitikz}
+\end{document}

@@ -1,0 +1,25 @@
+* Questao 2, item (d): simulacao de transiente
+* Senoide de 10 mV de pico em 10 kHz (meio da faixa de passagem)
+* Capacitores de acoplamento ajustados para fL = 20 Hz
+.param Cac1=7.95u Cac2=6.30u
+VI vi 0 SINE(0 10m 10k)
+VP vp 0 20
+VN vn 0 -25
+RS vi x 1k
+CC1 x e {Cac1}
+RE vp e 10k
+Q1 c 0 e QP
+* Capacitancias do modelo de pequenos sinais (base = terra): C_pi entre emissor e base, C_mu entre coletor e base
+CPI e 0 10p
+CMU c 0 1p
+RC c vn 6.5k
+CC2 c vo {Cac2}
+RL vo 0 5k
+* beta = 100; VA infinito (padrao); IS escolhida para VEB = 0,7 V na corrente de polarizacao (IC = 1,91 mA)
+.model QP PNP(BF=100 IS=3.37f)
+.options plotwinsize=0 reltol=1e-6
+.tran 0 2m 0 50n
+.meas tran vi_pp PP V(vi) FROM 1m TO 2m
+.meas tran vo_pp PP V(vo) FROM 1m TO 2m
+.meas tran Av PARAM vo_pp/vi_pp
+.end

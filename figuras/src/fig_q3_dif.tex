@@ -1,0 +1,74 @@
+\documentclass[11pt,border=4pt]{standalone}
+\input{estilo_circuitos}
+% Par diferencial da Questão 3 com entrada diferencial e as fontes c.c. em terra (fig:q3-dif).
+% Redesenho de figuras/fig_q3_dif.pdf com folga nos rótulos; entra no relatório em escala 1.
+% Compilar com pdflatex.
+
+% Fração das tensões de saída: numerador e denominador um pouco mais afastados da barra,
+% para a barra não encostar no índice do numerador nem no denominador.
+\newcommand{\fracsaida}[2]{\dfrac{\raisebox{2.3pt}{$#1$}}{\raisebox{-1.1pt}{$#2$}}}
+
+\begin{document}
+\begin{circuitikz}
+  % Geometria (cm). Nó das fontes em (0,0); colunas dreno-fonte de M1 e M2 em x = -xcol e x = +xcol.
+  \def\xcol{2.3}      % meia distância entre as colunas
+  \def\ydreno{2.3}    % terminal de dreno dos transistores (centro em ydreno-0,77; fonte em ydreno-1,54)
+  \def\ysaida{3.15}   % nó de dreno (saídas)
+  \def\ytopo{4.75}    % topo de R_D, ligado à alimentação c.c. em terra
+  \def\lsaida{1.0}    % comprimento do fio de saída
+  \def\lentrada{0.7}  % comprimento do fio de entrada
+
+  % ---------- transistores (M2 espelhado: porta à direita) ----------
+  \node[nmos, arrowmos, anchor=D] (M1) at (-\xcol,\ydreno) {};
+  \node[nmos, arrowmos, xscale=-1, anchor=D] (M2) at (\xcol,\ydreno) {};
+
+  % ---------- ramos de dreno: R_D até a alimentação c.c. em terra ----------
+  \draw (M1.D) -- (-\xcol,\ysaida) to[R] (-\xcol,\ytopo) node[ground, rotate=180] {};
+  \draw (M2.D) -- (\xcol,\ysaida) to[R] (\xcol,\ytopo) node[ground, rotate=180] {};
+
+  % ---------- fontes interligadas e R_S até a terra ----------
+  \draw (M1.S) -- (-\xcol,0) -- (\xcol,0) -- (M2.S);
+  \draw (0,0) -- (0,-0.45) to[R] (0,-2.05) node[ground] {};
+  \node[circ] at (0,0) {};
+
+  % ---------- saídas ----------
+  \draw (-\xcol,\ysaida) -- (-\xcol-\lsaida,\ysaida) node[ocirc] {};
+  \draw (\xcol,\ysaida) -- (\xcol+\lsaida,\ysaida) node[ocirc] {};
+  \node[circ] at (-\xcol,\ysaida) {};
+  \node[circ] at (\xcol,\ysaida) {};
+
+  % ---------- entradas ----------
+  \draw (M1.G) -- ++(-\lentrada,0) node[ocirc] (E1) {};
+  \draw (M2.G) -- ++(\lentrada,0) node[ocirc] (E2) {};
+
+  % ---------- nomes dos componentes ----------
+  \node[anchor=east, inner sep=0pt] at (-\xcol-0.36,{(\ysaida+\ytopo)/2}) {$R_D$};
+  \node[anchor=west, inner sep=0pt] at (\xcol+0.36,{(\ysaida+\ytopo)/2}) {$R_D$};
+  \node[anchor=east, inner sep=0pt] at (-0.36,-1.25) {$R_S$};
+  \node[anchor=west, inner sep=0pt] at (-\xcol+0.3,\ydreno-0.77) {$M_1$};
+  \node[anchor=east, inner sep=0pt] at (\xcol-0.3,\ydreno-0.77) {$M_2$};
+
+  % ---------- anotações ----------
+  \begin{scope}[anot]
+    % tensões de saída
+    \node[anchor=east, inner sep=0pt] at (-\xcol-\lsaida-0.2,\ysaida)
+      {$v_{o1} = -g_m(R_D \parallel r_o)\:\fracsaida{v_{id}}{2}$};
+    \node[anchor=west, inner sep=0pt] at (\xcol+\lsaida+0.2,\ysaida)
+      {$v_{o2} = +g_m(R_D \parallel r_o)\:\fracsaida{v_{id}}{2}$};
+    % correntes de sinal nos drenos (para baixo em M1, para cima em M2)
+    \draw[line width=0.8pt, -latex] (-\xcol+0.3,{(\ydreno+\ysaida)/2+0.25}) -- (-\xcol+0.3,{(\ydreno+\ysaida)/2-0.25});
+    \node[anchor=west, inner sep=0pt] at (-\xcol+0.52,{(\ydreno+\ysaida)/2}) {$g_m v_{id}/2$};
+    \draw[line width=0.8pt, -latex] (\xcol-0.3,{(\ydreno+\ysaida)/2-0.25}) -- (\xcol-0.3,{(\ydreno+\ysaida)/2+0.25});
+    \node[anchor=east, inner sep=0pt] at (\xcol-0.52,{(\ydreno+\ysaida)/2}) {$g_m v_{id}/2$};
+    % excitação diferencial
+    \node[anchor=east, inner sep=0pt] at ($(E1)+(-0.2,0)$) {$+v_{id}/2$};
+    \node[anchor=west, inner sep=0pt] at ($(E2)+(0.2,0)$) {$-v_{id}/2$};
+    % tensões porta-fonte, sob os terminais de entrada
+    \node[align=center, inner sep=0pt] at (-3.9,0.3) {$+$\\[-2pt] $v_{gs1} = v_{id}/2$\\[-2pt] $-$};
+    \node[align=center, inner sep=0pt] at (3.9,0.3) {$+$\\[-2pt] $v_{gs2} = -v_{id}/2$\\[-2pt] $-$};
+    % nó das fontes e R_S
+    \node[anchor=north west, inner sep=0pt] at (0.2,-0.2) {$0\,\mathrm{V}$ (terra virtual)};
+    \node[anchor=west, inner sep=0pt] at (0.42,-1.25) {sem corrente de sinal};
+  \end{scope}
+\end{circuitikz}
+\end{document}

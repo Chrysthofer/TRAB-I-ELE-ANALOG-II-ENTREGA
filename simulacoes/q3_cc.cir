@@ -1,0 +1,24 @@
+* Questao 3, item (c): simulacao de corrente continua com v1 = v2 = 0
+VID vid 0 0
+VCM cm 0 0
+VP vp 0 5
+VN vn 0 -5
+* v1 = vicm + vid/2 e v2 = vicm - vid/2 (fontes de tensao controladas por tensao)
+E1 g1 cm vid 0 0.5
+E2 g2 cm vid 0 -0.5
+RD1 vp d1 25k
+RD2 vp d2 25k
+M1 d1 g1 s s MN L=10u W=10u
+M2 d2 g2 s s MN L=10u W=10u
+RS s vn 20k
+* Transistores identicos: kn'(W/L) = 100 uA/V^2 (KP = 100 uA/V^2 com W = L), Vtn = 1 V, lambda = 0,02 1/V
+.model MN NMOS(Level=1 KP=100u VTO=1 LAMBDA=0.02)
+.op
+.meas op IS   FIND I(RS)
+.meas op ID1  FIND Id(M1)
+.meas op ID2  FIND Id(M2)
+.meas op VS   FIND V(s)
+.meas op VGS  FIND V(g1)-V(s)
+.meas op VO2  FIND V(d2)
+.meas op VDS2 FIND V(d2)-V(s)
+.end

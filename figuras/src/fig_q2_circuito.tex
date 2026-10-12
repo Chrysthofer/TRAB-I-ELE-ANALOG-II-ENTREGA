@@ -1,0 +1,44 @@
+% Amplificador com transistor PNP da Questão 2 (Figura fig:q2-circuito).
+% Compilar com pdflatex; o PDF resultante substitui figuras/fig_q2_circuito.pdf.
+% Entra no relatório em tamanho natural (escala 1).
+\documentclass[11pt,border=4pt]{standalone}
+\input{estilo_circuitos}
+\begin{document}
+\begin{circuitikz}
+  % Folga entre rótulo e traço e meias-alturas dos símbolos no tamanho padrão do circuitikz
+  \def\g{6pt}        % folga desejada
+  \def\zz{5.98pt}    % meia-altura do zigue-zague do resistor
+  \def\pl{11.95pt}   % meia-altura das placas do capacitor e da placa longa da bateria; raio da fonte
+
+  % Trilho superior: v_i, R_S, C_C1, nó de R_E e emissor de Q
+  \draw (0,-3.1) node[ground]{} to[sV] (0,0)
+        to[R] (2.8,0)
+        to[C] (5.0,0) node[circ]{}
+        -- (6.1,0) node[pnp, rotate=90, anchor=E] (Q) {};
+  % Coletor de Q, nó de R_C, C_C2, nó de R_L e saída
+  \draw (Q.C) -- (8.34,0) node[circ]{}
+        to[C] (11.34,0) node[circ]{}
+        -- (12.34,0) node[ocirc]{};
+
+  % Base de Q no terra e ramos verticais
+  % (o traço longo da bateria fica do lado do início do caminho)
+  \draw (Q.B) node[ground]{};
+  \draw (5.0,0) to[R] (5.0,-2.4) to[battery1] (5.0,-3.8) node[ground]{};
+  \draw (8.34,-3.8) node[ground]{} to[battery1] (8.34,-2.4) to[R] (8.34,0);
+  \draw (11.34,0) to[R] (11.34,-3.8) node[ground]{};
+
+  % Rótulos
+  \node[anchor=east, inner sep=0] at ($(0,-1.55)+(-\pl-\g,0)$) {$v_i$};
+  \node[anchor=south, inner sep=0] at ($(1.4,0)+(0,\zz+\g+1.3pt)$) {$R_S$};
+  \node[anchor=north, inner sep=0] at ($(1.4,0)+(0,-\zz-\g)$) {$1\,\mathrm{k\Omega}$};
+  \node[anchor=south, inner sep=0] at ($(3.9,0)+(0,\pl+\g+1.5pt)$) {$C_{C1}$};
+  \node[anchor=south, inner sep=0] at ($($(Q.E)!0.5!(Q.C)$)+(0,\pl+\g+3.5pt)$) {$Q$};
+  \node[anchor=east, align=left, inner sep=0] at ($(5.0,-1.2)+(-\zz-\g,0)$) {$R_E$\\$10\,\mathrm{k\Omega}$};
+  \node[anchor=east, inner sep=0] at ($(5.0,-3.1)+(-\pl-\g,0)$) {$20\,\mathrm{V}$};
+  \node[anchor=west, align=left, inner sep=0] at ($(8.34,-1.2)+(\zz+\g,0)$) {$R_C$\\$6{,}5\,\mathrm{k\Omega}$};
+  \node[anchor=west, inner sep=0] at ($(8.34,-3.1)+(\pl+\g,0)$) {$25\,\mathrm{V}$};
+  \node[anchor=south, inner sep=0] at ($(9.84,0)+(0,\pl+\g+1.5pt)$) {$C_{C2}$};
+  \node[anchor=west, align=left, inner sep=0] at ($(11.34,-1.9)+(\zz+\g,0)$) {$R_L$\\$5\,\mathrm{k\Omega}$};
+  \node[anchor=west, inner sep=0] at ($(12.34,0)+(1.6pt+\g,0)$) {$v_o$};
+\end{circuitikz}
+\end{document}
